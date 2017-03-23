@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        \App\Client::truncate();
-        factory(\App\Client::class, 10)->create();
+        \App\Entities\Client::truncate();
+        factory(\App\Entities\Client::class, 10)->create();
 
         Model::reguard();
     }
