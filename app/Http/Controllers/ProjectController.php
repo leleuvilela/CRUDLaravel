@@ -31,7 +31,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return $this->service->show();
+
+        return $this->repository->findWhere(['owner_id' => \Authorizer::getResourceOwnerId()]);
     }
 
     /**
@@ -53,6 +54,10 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
+        if($this->checkProjectOwner($id) == false){
+            return ['error' => 'Access Forbidden'];
+        }
+
         return $this->repository->find($id);
     }
 
@@ -64,6 +69,9 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($this->checkProjectOwner($id) == false){
+            return ['error' => 'Access Forbidden'];
+        }
         $this->service->update($request->all(), $id);
     }
 
@@ -76,6 +84,16 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
+        if($this->checkProjectOwner($id) == false){
+            return ['error' => 'Access Forbidden'];
+        }
         $this->repository->find($id)->delete();
+    }
+
+    private function checkProjectOwner($projectId)
+    {
+        $userId = Authorizer::getResourceOwnerId();
+
+        return $this->repository->isOwner($projectId, $userId);
     }
 }
