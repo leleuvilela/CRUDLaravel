@@ -2,36 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\ProjectRepository;
-use App\Services\ProjectService;
+use App\Services\ProjectNoteService;
 use Illuminate\Http\Request;
+use App\Repositories\ProjectNoteRepository;
 
 
-class ProjectController extends Controller
+class ProjectNoteController extends Controller
 {
-    /**
-     * @var ProjectRepository
-     */
 
-    private $repository;
     /**
-     * @var ProjectService
+     * @var ProjectNoteRepository
+     */
+    protected $repository;
+
+    /**
+     * @var ProjectNoteService
      */
     private $service;
 
-    public function __construct(ProjectRepository $repository, ProjectService $service)
+    public function __construct(ProjectNoteRepository $repository, ProjectNoteService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
     }
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        return $this->service->show();
+        return $this->repository->findWhere(['project_id' => $id]);
     }
 
     /**
@@ -51,9 +54,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, $noteId)
     {
-        return $this->repository->find($id);
+        return $this->repository->findWhere(['project_id' =>$id, 'id' => $noteId]);
     }
 
     /**
@@ -62,9 +65,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $noteId)
     {
-        $this->service->update($request->all(), $id);
+        $this->service->update($request->all(), $noteId);
     }
 
 
@@ -74,8 +77,8 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $noteId)
     {
-        $this->repository->find($id)->delete();
+        $this->repository->find($noteId)->delete();
     }
 }

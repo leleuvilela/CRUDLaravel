@@ -9,22 +9,22 @@
 namespace App\Services;
 
 
-use App\Repositories\ProjectRepository;
-use App\Validators\ProjectValidator;
+use App\Repositories\ProjectNoteRepository;
+use App\Validators\ProjectNoteValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 
-class ProjectService
+class ProjectNoteService
 {
     /**
-     * @var ProjectRepository
+     * @var ProjectNoteRepository
      */
     protected  $repository;
     /**
-     * @var ProjectValidator
+     * @var ProjectNoteValidator
      */
     private $validator;
-    public function __construct(ProjectRepository $repository, ProjectValidator $validator)
+    public function __construct(ProjectNoteRepository $repository, ProjectNoteValidator $validator)
     {
         $this->repository = $repository;
         $this->validator = $validator;
@@ -33,7 +33,7 @@ class ProjectService
     public function show()
     {
         try{
-            return $this->repository->with('user')->with('client')->with('notes')->all();
+            return $this->repository->with('project')->all();
         } catch (ValidatorException $e){
             return [
                 'error' => true,
