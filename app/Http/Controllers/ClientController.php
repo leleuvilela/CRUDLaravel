@@ -53,7 +53,15 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        return $this->repository->find($id);
+        try {
+            return $this->repository->find($id);
+        } catch (QueryException $e) {
+            return ['error'=>true, 'Cliente não pode ser exibido.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Cliente não encontrado.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Ocorreu algum erro ao mostrar o cliente.'];
+        }
     }
 
     /**
@@ -65,7 +73,16 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->service->update($request->all(), $id);
+        try {
+            $this->service->update($request->all(), $id);
+            return ['success'=>true, 'Cliente editado com sucesso!'];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'Cliente não pode ser editado.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Cliente não encontrado.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Ocorreu algum erro ao editar o cliente.'];
+        }
     }
 
     /**
@@ -76,6 +93,16 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        $this->repository->find($id)->delete();
+        try {
+            $this->repository->find($id)->delete();
+            return ['success'=>true, 'Cliente deletado com sucesso!'];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'Cliente não pode ser apagado.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Cliente não encontrado.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Ocorreu algum erro ao excluir o cliente.'];
+        }
+
     }
 }

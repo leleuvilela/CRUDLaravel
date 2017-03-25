@@ -56,7 +56,11 @@ class ProjectNoteController extends Controller
      */
     public function show($id, $noteId)
     {
-        return $this->repository->findWhere(['project_id' =>$id, 'id' => $noteId]);
+        try{
+            return $this->repository->findWhere(['project_id' =>$id, 'id' => $noteId]);
+        } catch (\Exception $e){
+            return ['error'=>true, 'Ocorreu algum erro ao mostrar a nota.'];
+        }
     }
 
     /**
@@ -67,7 +71,11 @@ class ProjectNoteController extends Controller
      */
     public function update(Request $request, $id, $noteId)
     {
-        $this->service->update($request->all(), $noteId);
+        try{
+            $this->service->update($request->all(), $noteId);
+        } catch (\Exception $e){
+            return ['error'=>true, 'Ocorreu algum erro ao editar a nota.'];
+        }
     }
 
 
@@ -79,6 +87,10 @@ class ProjectNoteController extends Controller
      */
     public function destroy($id, $noteId)
     {
-        $this->repository->find($noteId)->delete();
+        try{
+            $this->repository->find($noteId)->delete();
+        } catch (\Exception $e){
+            return ['error'=>true, 'Ocorreu um erro ao excluir a nota.'];
+        }
     }
 }

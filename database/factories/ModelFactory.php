@@ -24,8 +24,8 @@ $factory->define(App\Entities\Client::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Entities\Project::class, function (Faker\Generator $faker) {
     return [
-        'owner_id' => rand(1,5),
-        'client_id' => rand(1,5),
+        'owner_id' => rand(1,10),
+        'client_id' => rand(1,10),
         'name' => $faker->word,
         'description' => $faker->sentence(),
         'progress' => rand(1,100),

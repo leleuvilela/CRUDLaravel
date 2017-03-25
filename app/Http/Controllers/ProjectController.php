@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\ProjectRepository;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 
 class ProjectController extends Controller
@@ -87,7 +88,16 @@ class ProjectController extends Controller
         if($this->checkProjectOwner($id) == false){
             return ['error' => 'Access Forbidden'];
         }
-        $this->repository->find($id)->delete();
+        try {
+            $this->repository->find($id)->delete();
+            return ['success'=>true, 'Projeto deletado com sucesso!'];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'Projeto não pode ser apagado pois existe um ou mais clientes vinculados a ele.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Projeto não encontrado.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Ocorreu algum erro ao excluir o projeto.'];
+        }
     }
 
     private function checkProjectOwner($projectId)
