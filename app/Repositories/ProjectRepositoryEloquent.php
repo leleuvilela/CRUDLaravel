@@ -4,11 +4,12 @@ namespace App\Repositories;
 
 use App\Entities\Project;
 use App\Presenters\ProjectPresenter;
+use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class ProjectRepositoryEloquent extends BaseRepository implements ProjectRepository
 {
-        public function model()
+    public function model()
     {
         return Project::class;
     }
@@ -38,6 +39,11 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
     public function presenter()
     {
         return ProjectPresenter::class;
+    }
+
+    public function boot()
+    {
+        $this->pushCriteria(app(RequestCriteria::class));
     }
 
 }
