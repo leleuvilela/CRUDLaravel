@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        //$this->call(UserTableSeeder::class);
-        //$this->call(ClientTableSeeder::class);
+        $this->call(UserTableSeeder::class);
+        $this->call(ClientTableSeeder::class);
         $this->call(ProjectTableSeeder::class);
         $this->call(ProjectNoteTableSeeder::class);
     //  factory(\App\Entities\Client::class, 10)->create();

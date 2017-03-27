@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Presenters\ProjectPresenter;
 use App\Repositories\ProjectRepository;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
@@ -55,7 +56,8 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        if($this->checkProjectOwner($id) == false){
+        $this->repository->setPresenter(ProjectPresenter::class);
+        if($this->checkProjectPermissions($id) == false){
             return ['error' => 'Access Forbidden'];
         }
 
@@ -70,7 +72,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($this->checkProjectOwner($id) == false){
+        if($this->checkProjectPermissions($id) == false){
             return ['error' => 'Access Forbidden'];
         }
         $this->service->update($request->all(), $id);
@@ -85,7 +87,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        if($this->checkProjectOwner($id) == false){
+        if($this->checkProjectPermissions($id) == false){
             return ['error' => 'Access Forbidden'];
         }
         try {
@@ -105,5 +107,20 @@ class ProjectController extends Controller
         $userId = Authorizer::getResourceOwnerId();
 
         return $this->repository->isOwner($projectId, $userId);
+    }
+
+    private function checkProjectMember($projectId)
+    {
+        $userId = Authorizer::getResourceOwnerId();
+
+        return $this->repository->hasMember($projectId, $userId);
+    }
+
+    private function checkProjectPermissions($projectId)
+    {
+        if ($this->checkProjectMember($projectId) or $this->checkProjectOwner($projectId)){
+            return true;
+        }
+        return false;
     }
 }

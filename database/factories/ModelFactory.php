@@ -36,7 +36,7 @@ $factory->define(App\Entities\Project::class, function (Faker\Generator $faker) 
 
 $factory->define(App\Entities\ProjectNote::class, function (Faker\Generator $faker) {
     return [
-        'project_id' => rand(1,5),
+        'project_id' => rand(2,11),
         'title' => $faker->word,
         'note' => $faker->paragraph,
     ];
