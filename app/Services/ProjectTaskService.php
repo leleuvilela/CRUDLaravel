@@ -9,22 +9,22 @@
 namespace App\Services;
 
 
-use App\Repositories\ProjectNoteRepository;
-use App\Validators\ProjectNoteValidator;
+use App\Repositories\ProjectTaskRepository;
+use App\Validators\ProjectTaskValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 
-class ProjectNoteService
+class ProjectTaskService
 {
     /**
-     * @var ProjectNoteRepository
+     * @var ProjectTaskRepository
      */
     protected  $repository;
     /**
-     * @var ProjectNoteValidator
+     * @var ProjectTaskValidator
      */
     private $validator;
-    public function __construct(ProjectNoteRepository $repository, ProjectNoteValidator $validator)
+    public function __construct(ProjectTaskRepository $repository, ProjectTaskValidator $validator)
     {
         $this->repository = $repository;
         $this->validator = $validator;

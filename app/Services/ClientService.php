@@ -42,9 +42,7 @@ class ClientService
                 'message' => $e->getMessageBag()
             ];
         }
-        //enviar email
-        //disparar notif
-        //eis a diferença entre repository e service
+
     }
 
     public function update(array $data, $id)

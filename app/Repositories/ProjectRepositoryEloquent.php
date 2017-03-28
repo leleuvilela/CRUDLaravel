@@ -28,7 +28,7 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
         $project = $this->skipPresenter()->find($projectId);
 
         foreach ($project->members as $member){
-            if($member->id == $memberId){
+            if($member->member_id == $memberId){
                 return true;
             }
         }

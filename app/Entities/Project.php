@@ -3,9 +3,13 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\Presentable;
+use Prettus\Repository\Traits\PresentableTrait;
 
-class Project extends Model
+class Project extends Model implements Presentable
 {
+    use PresentableTrait;
+
     protected $fillable = [
         'owner_id',
         'client_id',
@@ -34,5 +38,15 @@ class Project extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'project_members', 'project_id', 'member_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(ProjectTask::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(ProjectFile::class);
     }
 }

@@ -13,6 +13,8 @@ use App\Repositories\ProjectRepository;
 use App\Validators\ProjectValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
+use Illuminate\Contracts\Filesystem\Factory as Storage;
+use Illuminate\Filesystem\Filesystem;
 
 class ProjectService
 {
@@ -24,10 +26,12 @@ class ProjectService
      * @var ProjectValidator
      */
     private $validator;
-    public function __construct(ProjectRepository $repository, ProjectValidator $validator)
+    public function __construct(ProjectRepository $repository, ProjectValidator $validator, Filesystem $filesystem, Storage $storage)
     {
         $this->repository = $repository;
         $this->validator = $validator;
+        $this->filesystem = $filesystem;
+        $this->storage = $storage;
     }
 
     public function show()
@@ -41,6 +45,7 @@ class ProjectService
             ];
         }
     }
+
 
     public function create(array $data)
     {
@@ -59,6 +64,16 @@ class ProjectService
         //eis a diferença entre repository e service
     }
 
+    public function addMember($projectId, $memberId)
+    {
+        $this->repository->members()->create(['project_id' => $projectId, 'member_id' => $memberId]);
+    }
+
+    public function removeMember($projectId, $memberId)
+    {
+        $this->repository->members()->findWhere(['project_id' => $projectId, 'member_id' => $memberId]);
+    }
+
     public function update(array $data, $id)
     {
         try{
@@ -70,5 +85,13 @@ class ProjectService
                 'message' => $e->getMessageBag()
             ];
         }
+    }
+
+    public function createFile(array $data)
+    {
+        $project = $this->repository->skipPresenter()->find($data['project_id']);
+        $projectFile = $project->files()->create($data);
+
+        $this->storage->put($projectFile->id.".".$data['extension'], $this->filesystem->get($data['file']));
     }
 }
