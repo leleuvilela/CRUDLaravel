@@ -31,6 +31,16 @@ config.vendor_path_css = [
     config.bower_path + '/bootstrap/dist/css/bootstrap-theme.min.css'
 ];
 
+config.build_path_html = config.build_path + '/views';
+
+gulp.task('copy-html', function () {
+    gulp.src([
+        config.assets_path + '/js/views/**/*.html'
+    ])
+        .pipe(gulp.dest(config.build_path_html))
+        .pipe(liveReload());
+})
+
 gulp.task('copy-styles', function () {
     gulp.src([
         config.assets_path + '/css/**/*.css'
