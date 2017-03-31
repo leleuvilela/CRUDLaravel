@@ -1,26 +1,27 @@
-var app = angular.module('app', ['ngRoute', 'angular-oauth2', 'app.controllers']);
+var app = angular.module('app', ['ngRoute','angular-oauth2','app.controllers']);
 
-angular.module('app.controllers', ['angular-oauth2']);
+angular.module('app.controllers',['ngMessages','angular-oauth2']);
 
-app.config(['$routeProvider', 'OAuthProvider', function ($routeProvider, OAuthProvider) {
+app.config(['$routeProvider', 'OAuthProvider',function($routeProvider, OAuthProvider){
     $routeProvider
-        .when('/login', {
-            templateUrl: 'build/views/login.html',
-            controller: 'LoginController'
+        .when('/login',{
+            templateUrl:'build/views/login.html',
+            controller:'LoginController'
         })
-        .when('/home', {
-            templateUrl: 'build/views/home.html',
-            controller: 'HomeController'
+        .when('/home',{
+            templateUrl:'build/views/home.html',
+            controller:'HomeController'
         });
     OAuthProvider.configure({
         baseUrl: 'http://localhost:8000',
         clientId: 'appid1',
-        clientSecret: 'secret' // optional
+        clientSecret: 'secret',
+        grantPath: 'oauth/access_token'
     });
 }]);
 
-app.run(['$rootScope', '$window', 'OAuth', function ($rootScope, $window, OAuth) {
-    $rootScope.$on('oauth:error', function (event, rejection) {
+app.run(['$rootScope', '$window', 'OAuth', function($rootScope, $window, OAuth) {
+    $rootScope.$on('oauth:error', function(event, rejection) {
         // Ignore `invalid_grant` error - should be catched on `LoginController`.
         if ('invalid_grant' === rejection.data.error) {
             return;
