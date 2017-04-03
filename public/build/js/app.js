@@ -1,11 +1,19 @@
-var app = angular.module('app', ['ngRoute','angular-oauth2','app.controllers', 'app.services']);
+var app = angular.module('app', ['ngRoute','angular-oauth2','app.controllers', 'app.services', 'app.filters']);
 
 angular.module('app.controllers',['ngMessages','angular-oauth2']);
 angular.module('app.services',['ngResource']);
+angular.module('app.filters',[]);
 
 app.provider('appConfig', function(){
     var config = {
-        baseUrl: 'http://localhost:8000/'
+        baseUrl: 'http://localhost:8000/',
+        project: {
+            status: [
+                {value: 1, label: 'Não Iniciado'},
+                {value: 2, label: 'Iniciado'},
+                {value: 3, label: 'Concluído'}
+            ]
+        }
     };
 
     return {
@@ -53,6 +61,22 @@ app.config(['$routeProvider', '$httpProvider', 'OAuthProvider', 'OAuthTokenProvi
         .when('/clients/:id/remove',{
             templateUrl:'build/views/client/remove.html',
             controller:'ClientRemoveController'
+        })
+        .when('/project',{
+            templateUrl:'build/views/project/list.html',
+            controller:'ProjectListController'
+        })
+        .when('/project/new',{
+            templateUrl:'build/views/project/new.html',
+            controller:'ProjectNewController'
+        })
+        .when('/project/:id/edit',{
+            templateUrl:'build/views/project/edit.html',
+            controller:'ProjectEditController'
+        })
+        .when('/project/:id/remove',{
+            templateUrl:'build/views/project/remove.html',
+            controller:'ProjectRemoveController'
         })
         .when('/project/:id/notes',{
             templateUrl:'build/views/project-note/list.html',

@@ -2,22 +2,11 @@
 
 namespace App\Transformers;
 
-use League\Fractal\TransformerAbstract;
 use App\Entities\User;
+use League\Fractal\TransformerAbstract;
 
-/**
- * Class ProjectMemberTransformer
- * @package namespace App\Transformers;
- */
 class ProjectMemberTransformer extends TransformerAbstract
 {
-
-    /**
-     * Transform the \User entity
-     * @param \User $member
-     *
-     * @return array
-     */
     public function transform(User $member)
     {
         return [

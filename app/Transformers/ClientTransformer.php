@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Notebook
- * Date: 27/03/2017
- * Time: 09:34
- */
 
 namespace App\Transformers;
 
@@ -25,6 +19,4 @@ class ClientTransformer extends TransformerAbstract
             'obs' => $client->obs
         ];
     }
-
-
 }
