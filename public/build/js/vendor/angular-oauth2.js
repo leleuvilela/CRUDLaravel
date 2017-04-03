@@ -1,1 +1,266 @@
-!function(e,t){"function"==typeof define&&define.amd?define(["angular","angular-cookies","query-string"],t):"object"==typeof exports?module.exports=t(require("angular"),require("angular-cookies"),require("query-string")):e.angularOAuth2=t(e.angular,"ngCookies",e.queryString)}(this,function(e,t,n){function r(e,t,n){return{request:function(e){return e.headers=e.headers||{},!e.headers.hasOwnProperty("Authorization")&&n.getAuthorizationHeader()&&(e.headers.Authorization=n.getAuthorizationHeader()),e},responseError:function(r){return 400!==r.status||!r.data||"invalid_request"!==r.data.error&&"invalid_grant"!==r.data.error||(n.removeToken(),t.$emit("oauth:error",r)),(401===r.status&&r.data&&"invalid_token"===r.data.error||r.headers("www-authenticate")&&0===r.headers("www-authenticate").indexOf("Bearer"))&&t.$emit("oauth:error",r),e.reject(r)}}}function o(e){e.interceptors.push("oauthInterceptor")}function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(){var t=this,r=function(t){if(!(t instanceof Object))throw new TypeError("Invalid argument: `config` must be an `Object`.");var n=e.extend({},f,t);return e.forEach(h,function(e){if(!n[e])throw new Error("Missing parameter: "+e+".")}),"/"===n.baseUrl.substr(-1)&&(n.baseUrl=n.baseUrl.slice(0,-1)),"/"!==n.grantPath[0]&&(n.grantPath="/"+n.grantPath),"/"!==n.revokePath[0]&&(n.revokePath="/"+n.revokePath),n};this.configure=function(e){t.defaultConfig=r(e)},this.$get=function(t,o){var a=function(){function a(e){i(this,a),this.config=e}return s(a,[{key:"configure",value:function(e){this.config=r(e)}},{key:"isAuthenticated",value:function(){return!!o.getToken()}},{key:"getAccessToken",value:function(r,i){return r=e.extend({client_id:this.config.clientId,grant_type:"password"},r),null!==this.config.clientSecret&&(r.client_secret=this.config.clientSecret),r=n.stringify(r),i=e.extend({headers:{Authorization:void 0,"Content-Type":"application/x-www-form-urlencoded"}},i),t.post(""+this.config.baseUrl+this.config.grantPath,r,i).then(function(e){return o.setToken(e.data),e})}},{key:"getRefreshToken",value:function(r,i){return r=e.extend({client_id:this.config.clientId,grant_type:"refresh_token",refresh_token:o.getRefreshToken()},r),null!==this.config.clientSecret&&(r.client_secret=this.config.clientSecret),r=n.stringify(r),i=e.extend({headers:{Authorization:void 0,"Content-Type":"application/x-www-form-urlencoded"}},i),t.post(""+this.config.baseUrl+this.config.grantPath,r,i).then(function(e){return o.setToken(e.data),e})}},{key:"revokeToken",value:function(r,i){var a=o.getRefreshToken();return r=e.extend({client_id:this.config.clientId,token:a?a:o.getAccessToken(),token_type_hint:a?"refresh_token":"access_token"},r),null!==this.config.clientSecret&&(r.client_secret=this.config.clientSecret),r=n.stringify(r),i=e.extend({headers:{"Content-Type":"application/x-www-form-urlencoded"}},i),t.post(""+this.config.baseUrl+this.config.revokePath,r,i).then(function(e){return o.removeToken(),e})}}]),a}();return new a(this.defaultConfig)},this.$get.$inject=["$http","OAuthToken"]}function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function u(){var t={name:"token",options:{secure:!0}};this.configure=function(n){if(!(n instanceof Object))throw new TypeError("Invalid argument: `config` must be an `Object`.");return e.extend(t,n),t},this.$get=function(e){var n=function(){function n(){i(this,n)}return s(n,[{key:"setToken",value:function(n){return e.putObject(t.name,n,t.options)}},{key:"getToken",value:function(){return e.getObject(t.name)}},{key:"getAccessToken",value:function(){return this.getToken()?this.getToken().access_token:void 0}},{key:"getAuthorizationHeader",value:function(){if(this.getTokenType()&&this.getAccessToken())return this.getTokenType().charAt(0).toUpperCase()+this.getTokenType().substr(1)+" "+this.getAccessToken()}},{key:"getRefreshToken",value:function(){return this.getToken()?this.getToken().refresh_token:void 0}},{key:"getTokenType",value:function(){return this.getToken()?this.getToken().token_type:void 0}},{key:"removeToken",value:function(){return e.remove(t.name,t.options)}}]),n}();return new n},this.$get.$inject=["$cookies"]}var c=e.module("angular-oauth2",[t]).config(o).factory("oauthInterceptor",r).provider("OAuth",a).provider("OAuthToken",u);r.$inject=["$q","$rootScope","OAuthToken"],o.$inject=["$httpProvider"];var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),f={baseUrl:null,clientId:null,clientSecret:null,grantPath:"/oauth2/token",revokePath:"/oauth2/revoke"},h=["baseUrl","clientId","grantPath","revokePath"],s=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}();return c});
+/**
+ * angular-oauth2 - Angular OAuth2
+ * @version v3.0.1
+ * @link https://github.com/seegno/angular-oauth2
+ * @license MIT
+ */
+(function(root, factory) {
+    if (typeof define === "function" && define.amd) {
+        define([ "angular", "query-string" ], factory);
+    } else if (typeof exports === "object") {
+        module.exports = factory(require("angular"), require("query-string"));
+    } else {
+        root.angularOAuth2 = factory(root.angular, root.queryString);
+    }
+})(this, function(angular, queryString) {
+    var ngModule = angular.module("angular-oauth2", [ "ngCookies" ]).config(oauthConfig).factory("oauthInterceptor", oauthInterceptor).provider("OAuth", OAuthProvider).provider("OAuthToken", OAuthTokenProvider);
+    function oauthConfig($httpProvider) {
+        $httpProvider.interceptors.push("oauthInterceptor");
+    }
+    oauthConfig.$inject = [ "$httpProvider" ];
+    var _prototypeProperties = function(child, staticProps, instanceProps) {
+        if (staticProps) Object.defineProperties(child, staticProps);
+        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
+    };
+    var defaults = {
+        baseUrl: null,
+        clientId: null,
+        clientSecret: null,
+        grantPath: "/oauth2/token",
+        revokePath: "/oauth2/revoke"
+    };
+    var requiredKeys = [ "baseUrl", "clientId", "grantPath", "revokePath" ];
+    function OAuthProvider() {
+        var config;
+        this.configure = function(params) {
+            if (config) {
+                throw new Error("Already configured.");
+            }
+            if (!(params instanceof Object)) {
+                throw new TypeError("Invalid argument: `config` must be an `Object`.");
+            }
+            config = angular.extend({}, defaults, params);
+            angular.forEach(requiredKeys, function(key) {
+                if (!config[key]) {
+                    throw new Error("Missing parameter: " + key + ".");
+                }
+            });
+            if ("/" === config.baseUrl.substr(-1)) {
+                config.baseUrl = config.baseUrl.slice(0, -1);
+            }
+            if ("/" !== config.grantPath[0]) {
+                config.grantPath = "/" + config.grantPath;
+            }
+            if ("/" !== config.revokePath[0]) {
+                config.revokePath = "/" + config.revokePath;
+            }
+            return config;
+        };
+        this.$get = function($http, OAuthToken) {
+            var OAuth = function() {
+                function OAuth() {
+                    if (!config) {
+                        throw new Error("`OAuthProvider` must be configured first.");
+                    }
+                }
+                _prototypeProperties(OAuth, null, {
+                    isAuthenticated: {
+                        value: function isAuthenticated() {
+                            return !!OAuthToken.getToken();
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getAccessToken: {
+                        value: function getAccessToken(user, options) {
+                            if (!user || !user.username || !user.password) {
+                                throw new Error("`user` must be an object with `username` and `password` properties.");
+                            }
+                            var data = {
+                                client_id: config.clientId,
+                                grant_type: "password",
+                                username: user.username,
+                                password: user.password
+                            };
+                            if (null !== config.clientSecret) {
+                                data.client_secret = config.clientSecret;
+                            }
+                            data = queryString.stringify(data);
+                            options = angular.extend({
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                }
+                            }, options);
+                            return $http.post("" + config.baseUrl + "" + config.grantPath, data, options).then(function(response) {
+                                OAuthToken.setToken(response.data);
+                                return response;
+                            });
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getRefreshToken: {
+                        value: function getRefreshToken() {
+                            var data = {
+                                client_id: config.clientId,
+                                grant_type: "refresh_token",
+                                refresh_token: OAuthToken.getRefreshToken()
+                            };
+                            if (null !== config.clientSecret) {
+                                data.client_secret = config.clientSecret;
+                            }
+                            data = queryString.stringify(data);
+                            var options = {
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                }
+                            };
+                            return $http.post("" + config.baseUrl + "" + config.grantPath, data, options).then(function(response) {
+                                OAuthToken.setToken(response.data);
+                                return response;
+                            });
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    revokeToken: {
+                        value: function revokeToken() {
+                            var data = queryString.stringify({
+                                token: OAuthToken.getRefreshToken() ? OAuthToken.getRefreshToken() : OAuthToken.getAccessToken()
+                            });
+                            var options = {
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                }
+                            };
+                            return $http.post("" + config.baseUrl + "" + config.revokePath, data, options).then(function(response) {
+                                OAuthToken.removeToken();
+                                return response;
+                            });
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    }
+                });
+                return OAuth;
+            }();
+            return new OAuth();
+        };
+        this.$get.$inject = [ "$http", "OAuthToken" ];
+    }
+    var _prototypeProperties = function(child, staticProps, instanceProps) {
+        if (staticProps) Object.defineProperties(child, staticProps);
+        if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
+    };
+    function OAuthTokenProvider() {
+        var config = {
+            name: "token",
+            options: {
+                secure: true
+            }
+        };
+        this.configure = function(params) {
+            if (!(params instanceof Object)) {
+                throw new TypeError("Invalid argument: `config` must be an `Object`.");
+            }
+            angular.extend(config, params);
+            return config;
+        };
+        this.$get = function($cookies) {
+            var OAuthToken = function() {
+                function OAuthToken() {}
+                _prototypeProperties(OAuthToken, null, {
+                    setToken: {
+                        value: function setToken(data) {
+                            return $cookies.putObject(config.name, data, config.options);
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getToken: {
+                        value: function getToken() {
+                            return $cookies.getObject(config.name);
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getAccessToken: {
+                        value: function getAccessToken() {
+                            return this.getToken() ? this.getToken().access_token : undefined;
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getAuthorizationHeader: {
+                        value: function getAuthorizationHeader() {
+                            if (!(this.getTokenType() && this.getAccessToken())) {
+                                return;
+                            }
+                            return "" + (this.getTokenType().charAt(0).toUpperCase() + this.getTokenType().substr(1)) + " " + this.getAccessToken();
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getRefreshToken: {
+                        value: function getRefreshToken() {
+                            return this.getToken() ? this.getToken().refresh_token : undefined;
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    getTokenType: {
+                        value: function getTokenType() {
+                            return this.getToken() ? this.getToken().token_type : undefined;
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    },
+                    removeToken: {
+                        value: function removeToken() {
+                            return $cookies.remove(config.name, config.options);
+                        },
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    }
+                });
+                return OAuthToken;
+            }();
+            return new OAuthToken();
+        };
+        this.$get.$inject = [ "$cookies" ];
+    }
+    function oauthInterceptor($q, $rootScope, OAuthToken) {
+        return {
+            request: function(config) {
+                if (OAuthToken.getAuthorizationHeader()) {
+                    config.headers = config.headers || {};
+                    config.headers.Authorization = OAuthToken.getAuthorizationHeader();
+                }
+                return config;
+            },
+            responseError: function(rejection) {
+                if (400 === rejection.status && rejection.data && ("invalid_request" === rejection.data.error || "invalid_grant" === rejection.data.error)) {
+                    OAuthToken.removeToken();
+                    $rootScope.$emit("oauth:error", rejection);
+                }
+                if (401 === rejection.status && (rejection.data && "invalid_token" === rejection.data.error) || rejection.headers("www-authenticate") && 0 === rejection.headers("www-authenticate").indexOf("Bearer")) {
+                    $rootScope.$emit("oauth:error", rejection);
+                }
+                return $q.reject(rejection);
+            }
+        };
+    }
+    oauthInterceptor.$inject = [ "$q", "$rootScope", "OAuthToken" ];
+    return ngModule;
+});
