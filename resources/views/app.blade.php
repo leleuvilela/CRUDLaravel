@@ -74,7 +74,7 @@
 		<script src="{{asset('build/js/vendor/angular-resource.min.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/angular-animate.min.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/angular-messages.min.js')}}" ></script>
-		<script src="{{asset('build/js/vendor/ui-bootstrap.min.js')}}" ></script>
+		<script src="{{asset('build/js/vendor/ui-bootstrap-tpls.min.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/navbar.min.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/angular-cookies.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/query-string.js')}}" ></script>
@@ -116,4 +116,5 @@
 	@else
 		<script src="{{elixir('js/all.js')}}" ></script>
 	@endif
+</body>
 </html>

@@ -12,7 +12,7 @@ class ProjectTransformer extends TransformerAbstract
     public function transform(Project $project)
     {
         return [
-            'project_id' => (int) $project->id,
+            'id' => (int) $project->id,
             'owner_id' => $project->owner_id,
             'project' => $project->name,
             'description' => $project->description,

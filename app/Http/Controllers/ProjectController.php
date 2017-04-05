@@ -26,6 +26,7 @@ class ProjectController extends Controller
         $this->repository = $repository;
         $this->service = $service;
         $this->repository->setPresenter($presenter);
+        $this->presenter = $presenter;
     }
     /**
      * Display a listing of the resource.
@@ -59,7 +60,7 @@ class ProjectController extends Controller
         if($this->checkProjectPermissions($id) == false){
             return ['error' => 'Access Forbidden'];
         }
-        return $this->repository->find($id);
+        return $this->repository->setPresenter($this->presenter)->find($id);
     }
 
     /**
