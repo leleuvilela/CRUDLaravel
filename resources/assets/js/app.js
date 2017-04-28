@@ -49,14 +49,27 @@ app.config(['$routeProvider', '$httpProvider', 'OAuthProvider', 'OAuthTokenProvi
     $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
     $httpProvider.defaults.transformRequest = appConfigProvider.config.utils.transformRequest;
     $httpProvider.defaults.transformResponse = appConfigProvider.config.utils.transformResponse;
+    // $httpProvider.interceptors.push('aouthFixInterceptor');
     $routeProvider
-        .when('/home',{
+        .when('/',{
             templateUrl:'build/views/home.html',
             controller:'HomeController'
+        })
+        .when('/home',{
+            templateUrl:'build/views/dashboard.html',
+            controller:'DashboardController'
         })
         .when('/login',{
             templateUrl:'build/views/login.html',
             controller:'LoginController'
+        })
+        .when('/logout',{
+            resolve: {
+                logout: ['$location', 'OAuthToken', function($location, OAuthToken){
+                    OAuthToken.removeToken();
+                    return $location.path('/login');
+                }]
+            }
         })
         .when('/clients',{
             templateUrl:'build/views/client/list.html',
@@ -124,7 +137,18 @@ app.config(['$routeProvider', '$httpProvider', 'OAuthProvider', 'OAuthTokenProvi
     });
 }]);
 
-app.run(['$rootScope', '$window', 'OAuth', function($rootScope, $window, OAuth) {
+app.run(['$rootScope', '$location', 'OAuth', function($rootScope, $location, OAuth) {
+    $rootScope.$on('$routeChangeStart', function(event,next,current){
+        if(next.$$route.originalPath != '/login'){
+            if(!OAuth.isAuthenticated()){
+                $location.path('login');
+            }
+        } else {
+            if(OAuth.isAuthenticated()){
+                $location.path('home');
+            }
+        }
+    });
     $rootScope.$on('oauth:error', function(event, rejection) {
         // Ignore `invalid_grant` error - should be catched on `LoginController`.
         if ('invalid_grant' === rejection.data.error) {
@@ -132,11 +156,11 @@ app.run(['$rootScope', '$window', 'OAuth', function($rootScope, $window, OAuth) 
         }
 
         // Refresh token when a `invalid_token` error occurs.
-        if ('invalid_token' === rejection.data.error) {
+        if ('access_denied' === rejection.data.error) {
             return OAuth.getRefreshToken();
         }
 
         // Redirect to `/login` with the `error_reason`.
-        return $window.location.href = '/login?error_reason=' + rejection.data.error;
+        return $location.path('/login');
     });
 }]);
