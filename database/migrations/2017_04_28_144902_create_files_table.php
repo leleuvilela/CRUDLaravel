@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNoticiasTable extends Migration
+class CreateFilesTable extends Migration
 {
 
 	/**
@@ -13,11 +13,11 @@ class CreateNoticiasTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('noticias', function(Blueprint $table) {
+		Schema::create('files', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('titulo');
-            $table->string('capa');
-            $table->text('conteudo');
+            $table->string('nome');
+            $table->string('descricao');
+            $table->string('ext');
             $table->timestamps();
 		});
 	}
@@ -29,7 +29,7 @@ class CreateNoticiasTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('noticias');
+		Schema::drop('files');
 	}
 
 }

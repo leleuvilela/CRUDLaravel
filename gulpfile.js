@@ -26,7 +26,8 @@ config.vendor_path_js = [
     config.bower_path + '/query-string/query-string.js',
     config.bower_path + '/angular-oauth2/dist/angular-oauth2.js',
     config.bower_path + '/gentelella/vendors/js/custom.min.js',
-    config.bower_path + '/gentelella/build/js/custom.min.js'
+    config.bower_path + '/gentelella/build/js/custom.min.js',
+    config.bower_path + '/ng-file-upload/ng-file-upload.min.js'
 ];
 
 config.build_path_css = config.build_path + '/css';

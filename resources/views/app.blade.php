@@ -57,6 +57,7 @@
 							<li><a href="#/home"><i class="fa fa-home"></i> Home </span></a></li>
 							<li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
 								<ul class="nav child_menu">
+									<li><a ng-href="#/noticia">Notícias</a></li>
 									<li><a ng-href="#/clients">Clients</a></li>
 									<li><a ng-href="#/project">Projects</a></li>
 								</ul>
@@ -124,6 +125,7 @@
 		<script src="{{asset('build/js/vendor/angular-cookies.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/query-string.js')}}" ></script>
 		<script src="{{asset('build/js/vendor/angular-oauth2.js')}}" ></script>
+		<script src="{{asset('build/js/vendor/ng-file-upload.min.js')}}" ></script>
 
 		<script src="{{asset('build/js/app.js')}}" ></script>
 
@@ -136,6 +138,11 @@
 		<script src="{{asset('build/js/controllers/client/clientNew.js')}}" ></script>
 		<script src="{{asset('build/js/controllers/client/clientEdit.js')}}" ></script>
 		<script src="{{asset('build/js/controllers/client/clientRemove.js')}}" ></script>
+
+		<script src="{{asset('build/js/controllers/noticia/noticiaList.js')}}" ></script>
+		<script src="{{asset('build/js/controllers/noticia/noticiaNew.js')}}" ></script>
+		<script src="{{asset('build/js/controllers/noticia/noticiaEdit.js')}}" ></script>
+		<script src="{{asset('build/js/controllers/noticia/noticiaRemove.js')}}" ></script>
 
 		<script src="{{asset('build/js/controllers/project/projectList.js')}}" ></script>
 		<script src="{{asset('build/js/controllers/project/projectNew.js')}}" ></script>
@@ -151,6 +158,7 @@
 		<!-- SERVICES !-->
 		<script src="{{asset('build/js/services/url.js')}}" ></script>
 		<script src="{{asset('build/js/services/oauthFixInterceptor.js')}}" ></script>
+		<script src="{{asset('build/js/services/noticia.js')}}" ></script>
 		<script src="{{asset('build/js/services/client.js')}}" ></script>
 		<script src="{{asset('build/js/services/project.js')}}" ></script>
 		<script src="{{asset('build/js/services/projectNote.js')}}" ></script>

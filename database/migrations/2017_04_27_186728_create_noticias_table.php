@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFotosTable extends Migration
+class CreateNoticiasTable extends Migration
 {
 
 	/**
@@ -13,10 +13,12 @@ class CreateFotosTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('fotos', function(Blueprint $table) {
+		Schema::create('noticias', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('nome');
-            $table->string('ext');
+            $table->string('titulo');
+            $table->integer('foto_id')->unsigned();
+            $table->foreign('foto_id')->references('id')->on('fotos');
+            $table->text('conteudo');
             $table->timestamps();
 		});
 	}
@@ -28,7 +30,7 @@ class CreateFotosTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('fotos');
+		Schema::drop('noticias');
 	}
 
 }

@@ -19,4 +19,9 @@ class Client extends Model implements Presentable
         'address',
         'obs'
     ];
+
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

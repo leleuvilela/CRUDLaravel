@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\ClientRepository;
-use App\Services\ClientService;
+use App\Repositories\NoticiaRepository;
+use App\Services\NoticiaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
-class ClientController extends Controller
+class NoticiaController extends Controller
 {
     /**
-     * @var ClientRepository
+     * @var NoticiaRepository
      */
 
     private $repository;
     /**
-     * @var ClientService
+     * @var NoticiaService
      */
     private $service;
 
-    public function __construct(ClientRepository $repository, ClientService $service)
+    public function __construct(NoticiaRepository $repository, NoticiaService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
@@ -42,6 +44,19 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+        $file = $request->file('file');
+
+        $extension = $file->getClientOriginalExtension();
+        $nome = $file->getClientOriginalName();
+
+        $data['file'] = $file;
+        $data['nome'] = $nome;
+        $data['ext'] = $extension;
+
+        $foto = $this->service->createFile($data);
+
+        $request->request->add(['foto_id' => $foto]);
+
         return $this->service->create($request->all());
     }
 

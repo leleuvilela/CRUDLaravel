@@ -3,14 +3,14 @@
         <div class="">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="#/clients/new" class="btn btn-success">New</a>
+                    <a href="#/noticia/new" class="btn btn-success">New</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Clients <small>client list</small></h2>
+                            <h2>Notícias <small>lista das notícias</small></h2>
                             <!--<ul class="nav navbar-right panel_toolbox">-->
                                 <!--<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>-->
                                 <!--</li>-->
@@ -33,22 +33,18 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Responsible</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
+                                    <th>Titulo</th>
+                                    <th>Conteudo</th>
                                     <th>Ação</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="o in clients">
-                                    <td>{{o.name}}</td>
-                                    <td>{{o.responsible}}</td>
-                                    <td>{{o.email}}</td>
-                                    <td>{{o.phone}}</td>
+                                <tr ng-repeat="o in noticia">
+                                    <td>{{o.titulo}}</td>
+                                    <td>{{o.conteudo | limitTo: 25}}</td>
                                     <td>
-                                        <a ng-href="#/clients/{{o.id}}/edit">Editar</a> |
-                                        <a ng-href="#/clients/{{o.id}}/remove">Excluir</a>
+                                        <a ng-href="#/noticia/{{o.id}}/edit">Editar</a> |
+                                        <a ng-href="#/noticia/{{o.id}}/remove">Excluir</a>
                                     </td>
                                 </tr>
                                 </tbody>

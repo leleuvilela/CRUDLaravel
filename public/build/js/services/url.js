@@ -1,4 +1,5 @@
-angular.module('app.services')
+
+,angular.module('app.services')
     .service('Url', ['$interpolate', function ($interpolate) {
         return {
             getUrlFromUrlSymbol: function (url, params) {
@@ -7,7 +8,7 @@ angular.module('app.services')
                     .replace(/\/$/, '');
             },
             getUrlResource: function (url) {
-                return url.replace(new RegExp('{{', 'g'), ';')
+                return url.replace(new RegExp('{{', 'g'), ':')
                     .replace(new RegExp('}}', 'g'), '')
             }
         };

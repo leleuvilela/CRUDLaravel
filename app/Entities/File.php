@@ -6,19 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
-class Noticia extends Model implements Transformable
+class File extends Model implements Transformable
 {
     use TransformableTrait;
 
     protected $fillable = [
-        'titulo',
-        'foto_id',
-        'conteudo',
+        'nome',
+        'descricao',
+        'ext'
     ];
-
-    public function foto()
-    {
-        return $this->belongsTo(Foto::class);
-    }
 
 }

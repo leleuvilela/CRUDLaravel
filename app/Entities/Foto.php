@@ -11,7 +11,8 @@ class Foto extends Model implements Transformable
     use TransformableTrait;
 
     protected $fillable = [
-        'foto'
+        'nome',
+        'ext'
     ];
 
 }

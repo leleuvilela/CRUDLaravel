@@ -26,6 +26,7 @@
     "bootstrap": "^3.3.7",
     "angular-oauth2": "3.0.1",
     "angular-cookies": "1.4",
-    "gentelella": "^1.4.0"
+    "gentelella": "^1.4.0",
+    "ng-file-upload": "7.0.17"
   }
 }
